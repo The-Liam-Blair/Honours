@@ -32,9 +32,10 @@ public abstract class Model
 	double sumOfWeights, sumOfWeightLogWeights, startingEntropy;
 	double[] sumsOfWeights, sumsOfWeightLogWeights, entropies;
 
+	
 	protected Model(int width, int height)
 	{
-		FMX = width;
+        FMX = width;
 		FMY = height;
 	}
 

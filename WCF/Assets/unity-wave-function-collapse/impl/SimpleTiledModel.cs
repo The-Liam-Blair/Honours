@@ -11,32 +11,49 @@ using System.Xml;
 using System.Linq;
 using System.Collections.Generic;
 
+/// <summary>
+/// Simple Tiled Model implementation used in the Wave Function Collapse algorithm.
+/// </summary>
 public class SimpleTiledModel : Model
 {
-	public List<string> tiles;
+    /// <summary>
+	/// All tiles
+	/// </summary>
+    public List<string> tiles;
 
 	public SimpleTiledModel(string name, string subsetName, int width, int height, bool periodic)
         :base(width,height)
     {
+		
+		
 		this.periodic = periodic;
 
-		var xdoc = new XmlDocument();
+        // Loads an XML file, which stores:
+        // - Tiles to be used in this current model,
+		// - Rules per tile, such as neighboring tiles.
+        var xdoc = new XmlDocument();
 		xdoc.LoadXml(name);
 		XmlNode xnode = xdoc.FirstChild;
-		bool unique = xnode.Get("unique", false);
+
+        // Unique designates a tile which does not have any rotations.
+        bool unique = xnode.Get("unique", false);
+		
 		xnode = xnode.FirstChild;
 
-		List<string> subset = null;
-		if (subsetName != "")
+		// Subset indicates that this tile ruleset is borrowing a pre-defined tile subset, which are reused to generate different models that utilise similar tiles and tile rules.
+        List<string> subset = null;
+
+		// If a subset has been defined, then find the subset(s) utilized.
+        if (subsetName != "")
 		{
 			subset = new List<string>();
-			foreach (XmlNode xsubset in xnode.NextSibling.NextSibling.ChildNodes) 
+            foreach (XmlNode xsubset in xnode.NextSibling.NextSibling.ChildNodes) 
 				if (xsubset.NodeType != XmlNodeType.Comment && xsubset.Get<string>("name") == subsetName)
 					foreach (XmlNode stile in xsubset.ChildNodes) subset.Add(stile.Get<string>("name"));
 		}
 
-
-		Func<string, string> rotate = (n) =>{
+        // Increment rotate, where each increment is a rotation of 90 degrees clockwise.
+        Func<string, string> rotate = (n) =>{
 			int rot = int.Parse(n.Substring(0,1))+1;
 			return ""+rot+n.Substring(1);
 		};
@@ -47,39 +64,57 @@ public class SimpleTiledModel : Model
 		List<int[]> action = new List<int[]>();
 		Dictionary<string, int> firstOccurrence = new Dictionary<string, int>();
 
-		foreach (XmlNode xtile in xnode.ChildNodes)
+
+		// For each tile that exists in the tile ruleset, add to the tile list.
+        foreach (XmlNode xtile in xnode.ChildNodes)
 		{
+			// Get tile name.
 			string tilename = xtile.Get<string>("name");
-			if (subset != null && !subset.Contains(tilename)) continue;
+
+            // If tile is not in the subset, then skip.
+            if (subset != null && !subset.Contains(tilename)) continue;
 
 			Func<int, int> a, b;
 			int cardinality;
 
+			// Retrieve tile symmetry, which is how the tile can be rotated/flipped.
 			char sym = xtile.Get("symmetry", 'X');
-			if (sym == 'L')
+
+            // Switch through pre-set symmetry methods:
+
+            // L symmetry, where the tile can be rotated 90 degrees clockwise, and flipped horizontally.
+            if (sym == 'L')
 			{
 				cardinality = 4;
 				a = i => (i + 1) % 4;
 				b = i => i % 2 == 0 ? i + 1 : i - 1;
 			}
-			else if (sym == 'T')
+
+            // T symmetry, where the tile can be rotated 90 degrees clockwise, and flipped vertically.
+            else if (sym == 'T')
 			{
 				cardinality = 4;
 				a = i => (i + 1) % 4;
 				b = i => i % 2 == 0 ? i : 4 - i;
 			}
+
+			// I Symmetry, which represents a central tile with 2 tiles underneath it.
 			else if (sym == 'I')
 			{
 				cardinality = 2;
 				a = i => 1 - i;
 				b = i => i;
 			}
+
+			// D symmetry- todo.
 			else if (sym == 'D')
 			{
 				cardinality = 2;
 				a = i => 1 - i;
 				b = i => 1 - i;
 			}
+
+			// X (?) symmetry- todo.
 			else
 			{
 				cardinality = 1;
@@ -88,10 +123,14 @@ public class SimpleTiledModel : Model
 			}
 
 			T = action.Count;
+			
 			firstOccurrence.Add(tilename, T);
 			
 			int[][] map = new int[cardinality][];
-			for (int t = 0; t < cardinality; t++)
+
+            // For this tile's unique cardinality (rotations), add to the action list.
+			// todo: investigate map var and Func<a,b>.
+            for (int t = 0; t < cardinality; t++)
 			{
 				map[t] = new int[8];
 
@@ -109,7 +148,8 @@ public class SimpleTiledModel : Model
 				action.Add(map[t]);
 			}
 
-			if (unique)
+            // If designated as unique, do not record additional tiles (Which represent tiles rotated). Otherwise, record rotations as unique tiles.
+            if (unique)
 			{
 				for (int t = 0; t < cardinality; t++)
 				{
@@ -122,7 +162,8 @@ public class SimpleTiledModel : Model
 				for (int t = 1; t < cardinality; t++) tiles.Add(rotate(tiles[T + t - 1]));
 			}
 
-			for (int t = 0; t < cardinality; t++) tempStationary.Add(xtile.Get("weight", 1.0f));
+            // Retrieve tile's weight.
+            for (int t = 0; t < cardinality; t++) tempStationary.Add(xtile.Get("weight", 1.0f));
 		}
 
 		T = action.Count;
