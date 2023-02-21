@@ -128,22 +128,32 @@ class Training : MonoBehaviour{
 
 				tile.name = fab.name;
 				#endif
-				int X = (int)(tilepos.x) / gridsize;
-				int Y = (int)(tilepos.y) / gridsize;
-				int R = (int)((360 - tile.transform.localEulerAngles.z)/90);
-				if (R == 4) {R = 0;};
-				if (!str_tile.ContainsKey(fab.name+R)){
+				int X = (int)(tilepos.x) / gridsize; // Global x pos of tile
+				int Y = (int)(tilepos.y) / gridsize; // Global y pos of tile
+				int R = (int)((360 - tile.transform.localEulerAngles.z)/90); // Tile rotation in 90 degree steps
+				if (R == 4) {R = 0;}
+				
+				// If this tile is the first tile type of it's type to be encountered, add it to the str_tile list, which stores individual tile types used in this model.
+				if (!str_tile.ContainsKey(fab.name+R))
+                {
 					int index = str_tile.Count+1;
 					str_tile.Add(fab.name+R, (byte)index);
 					tiles[index] = fab;
 					RS[index] = R;
-					sample[X, Y] = str_tile[fab.name+R];
-				} else {
+					
+					sample[X, Y] = str_tile[fab.name+R]; // Record the tile type at the designated position in the sample array, which is used to build the model later on.
+				}
+
+                // Record the tile type at the designated position in the sample array, which is used to build the model later on.
+                else
+                {
 					sample[X, Y] = str_tile[fab.name+R];
 				}
 			}
 		}
-		tiles = tiles.SubArray(0 , str_tile.Count+1);
+
+		// Dictionary data is converted into data readable by arrays and stored into respective array versions of these dictionaries to be displayed in the Unity Editor.
+        tiles = tiles.SubArray(0 , str_tile.Count+1);
 		RS = RS.SubArray(0 , str_tile.Count+1);
 	}
 
