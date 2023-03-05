@@ -1,29 +1,20 @@
 <set>
   <tiles>
-<tile name="Water" symmetry="X" weight="1.0"/>
-<tile name="Sand" symmetry="X" weight="1.0"/>
-<tile name="Grass" symmetry="X" weight="1.0"/>
-<tile name="Snow" symmetry="X" weight="1.0"/>
+<tile name="SandL" symmetry="X" weight="1"/>
+<tile name="WaterL" symmetry="X" weight="1"/>
+<tile name="GrassL" symmetry="X" weight="1"/>
 	</tiles>
-<neighbors>  <neighbor left="Water 0" right="Water 0"/>
-  <neighbor left="Water 1" right="Water 1"/>
-  <neighbor left="Water 1" right="Snow 1"/>
-  <neighbor left="Water 0" right="Snow 0"/>
-  <neighbor left="Snow 0" right="Snow 0"/>
-  <neighbor left="Snow 1" right="Snow 1"/>
-  <neighbor left="Snow 0" right="Water 0"/>
-  <neighbor left="Snow 1" right="Water 1"/>
-  <neighbor left="Water 1" right="Sand 1"/>
-  <neighbor left="Water 0" right="Sand 0"/>
-  <neighbor left="Sand 0" right="Sand 0"/>
-  <neighbor left="Sand 1" right="Sand 1"/>
-  <neighbor left="Sand 1" right="Grass 1"/>
-  <neighbor left="Sand 0" right="Water 0"/>
-  <neighbor left="Sand 1" right="Water 1"/>
-  <neighbor left="Sand 0" right="Grass 0"/>
-  <neighbor left="Grass 0" right="Grass 0"/>
-  <neighbor left="Grass 1" right="Grass 1"/>
-  <neighbor left="Grass 0" right="Sand 0"/>
-  <neighbor left="Grass 1" right="Sand 1"/>
+<neighbors>  <neighbor left="WaterL 0" right="WaterL 0"/>
+  <neighbor left="WaterL 1" right="WaterL 1"/>
+  <neighbor left="WaterL 1" right="SandL 1"/>
+  <neighbor left="WaterL 0" right="SandL 0"/>
+  <neighbor left="SandL 0" right="SandL 0"/>
+  <neighbor left="SandL 1" right="SandL 1"/>
+  <neighbor left="SandL 1" right="GrassL 1"/>
+  <neighbor left="SandL 0" right="GrassL 0"/>
+  <neighbor left="GrassL 0" right="GrassL 0"/>
+  <neighbor left="GrassL 1" right="GrassL 1"/>
+  <neighbor left="GrassL 1" right="SandL 1"/>
+  <neighbor left="SandL 1" right="WaterL 1"/>
 	</neighbors>
 </set>
