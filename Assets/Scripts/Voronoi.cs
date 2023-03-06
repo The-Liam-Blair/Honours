@@ -25,16 +25,30 @@ public class Voronoi : MonoBehaviour
     {
         _PARENT = GameObject.Find("VORONOI").transform;
 
-        var width = GameObject.Find("Output").GetComponent<SimpleTiledWFC>().width;
-        var height = GameObject.Find("Output").GetComponent<SimpleTiledWFC>().depth; // why is it named depth
+        var tiledWFC = GameObject.Find("Output").GetComponent<SimpleTiledWFC>();
 
-        _isGenerated = voronoiBiomes.Length > 0 && voronoiBiomes[0] != null; // Determine if the biome tiles currently exist or not by checking if the array is initialised
-                                                                             // then checking if the 1st tile is instantiated as a benchmark.
+        var width = tiledWFC.width;
+        var height = tiledWFC.depth; // why is it named depth
+
+        var tileSize = tiledWFC.gridsize;
+
+        if (voronoiBiomes == null)
+        {
+            _isGenerated = false;
+        }
+        else
+        {
+            _isGenerated = voronoiBiomes.Length > 0 && voronoiBiomes[0] != null;
+        }
 
         // Instantiate the array if it did not exist already.
         if (!_isGenerated)
         {
             voronoiBiomes = new GameObject[width * height];
+        }
+        else
+        {
+            return;
         }
 
         int x = 0;
@@ -42,19 +56,25 @@ public class Voronoi : MonoBehaviour
 
         for (var i = 0; i < width * height; i++)
         {
-            if (_isGenerated) // If tiles are already generated, then just reactivate.
+            if((x >= 2 && x <= 4) && (y >= 2 && y <= 5) ||
+                (x <= 5 && x >= 3) && (y >= 6 && y <= 8))
             {
-                voronoiBiomes[i].SetActive(true);
-            }
-            else // Otherwise, instantiate each tile at positions w.r.t the tile output but behind it.
-            {
-                voronoiBiomes[i] = Instantiate(blankTile,
-                    new Vector3((2 * x), 2 * y, 5),
+                voronoiBiomes[i] = Instantiate(biomedTile,
+                    new Vector3((tileSize * x), tileSize * y, 5),
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
-
-                voronoiBiomes[i].SetActive(true);
             }
+            else
+            {
+
+                // Create a new biome tile at this position (Scaled so that it fits the output boundaries).
+                voronoiBiomes[i] = Instantiate(blankTile,
+                    new Vector3((tileSize * x), tileSize * y, 5),
+                    Quaternion.identity);
+                voronoiBiomes[i].transform.SetParent(_PARENT);
+            }
+
+            voronoiBiomes[i].SetActive(true);
 
             // Increment x and increment y every time the width extreme has been reached.
             x++;
