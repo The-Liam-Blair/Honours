@@ -95,31 +95,35 @@ public class SimpleTiledWFC : MonoBehaviour{
 		if (output == null){return;}
 		if (group == null){return;}
         undrawn = false;
+
+		// Loop through the output in terms of it's 2D dimensions: width and height (depth).
 		for (int y = 0; y < depth; y++){
 			for (int x = 0; x < width; x++){ 
+				// Checks if the tile has already been drawn yet before each draw iteration (Rendering is the array of drawn output tiles).
 				if (rendering[x,y] == null){
-					string v = model.Sample(x, y);
+					string v = model.Sample(x, y); // Retrieve the tile name which the model has calculated earlier on at the current coordinate setting.
 					int rot = 0;
 					GameObject fab = null;
-					if (v != "?"){
-						rot = int.Parse(v.Substring(0,1));
-						v = v.Substring(1);
-						if (!obmap.ContainsKey(v)){
+					if (v != "?"){ // If the sample function returned "?", it means that the tile has not been collapsed yet (Should not occur as long as the model has been run previously).
+						rot = int.Parse(v.Substring(0,1)); // Retrieve the first char of recorded tile name, which is it's rotation...
+						v = v.Substring(1);                               // And then remove this rotational information from the tile name, leaving only it's name as inputted.
+
+						if (!obmap.ContainsKey(v)){ // Add this tile to a list that holds all unique tiles featured in the output (Excluding rotations).
 							fab = (GameObject)Resources.Load(v, typeof(GameObject));
 							obmap[v] = fab;
 						} else {
 							fab = obmap[v];
 						}
-						if (fab == null){
+						if (fab == null){ // If the tile could not be retrieved from above, skip placing it (Error handling that should not normally trigger).
 							continue;}
-						Vector3 pos = new Vector3(x*gridsize, y*gridsize, 0f);
-						GameObject tile = (GameObject)Instantiate(fab, new Vector3() , Quaternion.identity);
+						Vector3 pos = new Vector3(x*gridsize, y*gridsize, 0f); // Set tile position to coordinates, scaled by the grid size attribute.
+						GameObject tile = (GameObject)Instantiate(fab, new Vector3() , Quaternion.identity); // Spawn tile and set parent and scale.
 						Vector3 fscale = tile.transform.localScale;
 						tile.transform.parent = group;
 						tile.transform.localPosition = pos;
-						tile.transform.localEulerAngles = new Vector3(0, 0, 360-(rot*90));
+						tile.transform.localEulerAngles = new Vector3(0, 0, 360-(rot*90)); // If the tile has a rotation, rotate it by it's rotational value.
 						tile.transform.localScale = fscale;
-						rendering[x,y] = tile;
+						rendering[x,y] = tile; // Tile has been fully instantiated, so add it to the array that holds the tile outputs.
 					} else
                     {
                         undrawn = true;

@@ -229,10 +229,21 @@ public class SimpleTiledModel : Model
 
 
 
+	/// <summary>
+	/// Retrieve a given tile's name at a set coordinate.
+	/// </summary>
+	/// <param name="x">x pos</param>
+	/// <param name="y">y pos</param>
+	/// <returns>Tile name or "?" if the tile could not be found at the given coordinate position.</returns>
 	public string Sample(int x, int y){
 		bool found = false;
-		string res = "?";
-		for (int t = 0; t < T; t++) if (wave[x + y * FMX][t]){
+		string res = "?"; // Init return value to the error value, to be replaced with the correct tile name if it is found.
+		
+		// Loops through all the potential tiles this given tile could be.
+		// If the tile is found, the return value is set to that tile's name, and found is set to true. If this same tile at this position
+		// is found to also be another tile, it means it has not been collapsed fully yet (> 1 possibilities) and so the return type is set to "?" as the tile is not determined yet.
+		for (int t = 0; t < T; t++) if (wave[x + y * FMX][t])
+        {
 			if (found) {return "?";}
 			found = true;
 			res = tiles[t];
