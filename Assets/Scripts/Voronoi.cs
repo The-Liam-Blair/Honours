@@ -6,7 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Voronoi : MonoBehaviour
 {
-    protected GameObject[] voronoiBiomes; // 1D list of biome tiles.
+    public GameObject[] voronoiBiomes; // 1D list of biome tiles.
 
     [SerializeField] private GameObject blankTile; // White tile representing unassigned biome.
 
@@ -56,8 +56,8 @@ public class Voronoi : MonoBehaviour
 
         for (var i = 0; i < width * height; i++)
         {
-            if((x >= 2 && x <= 4) && (y >= 2 && y <= 5) ||
-                (x <= 5 && x >= 3) && (y >= 6 && y <= 8))
+            if ((x >= 4 && x <= 8) && (y >= 1 && y <= 4) ||
+                (x >= 1 && x <= 5) && (y >= 6 && y <= 9))
             {
                 voronoiBiomes[i] = Instantiate(biomedTile,
                     new Vector3((tileSize * x), tileSize * y, 5),
@@ -91,10 +91,16 @@ public class Voronoi : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        for (int i = 0; i < voronoiBiomes.Length; i++)
+        // While loop used as it may not destroy all children in one clear iteration.
+        while (_PARENT.childCount > 0)
         {
-            DestroyImmediate(voronoiBiomes[i]);
+            foreach (Transform child in _PARENT)
+            {
+                DestroyImmediate(child.gameObject);
+            }
         }
+        // De-reference the array.
+        voronoiBiomes = null;
     }
 
 
