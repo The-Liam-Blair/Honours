@@ -16,6 +16,8 @@ public class Voronoi : MonoBehaviour
 
     public Transform _PARENT; // Object parent these biome tiles will be set as the child of.
 
+    [SerializeField] public Color[] BiomeColors;
+
     // screen fitting values: Height: 90   Width: 160
 
     /// <summary>
@@ -56,22 +58,34 @@ public class Voronoi : MonoBehaviour
 
         for (var i = 0; i < width * height; i++)
         {
-            if ((x >= 4 && x <= 8) && (y >= 1 && y <= 4) ||
-                (x >= 1 && x <= 5) && (y >= 6 && y <= 9))
+            if ((x >= 1 && x <= 10) && (y >= 1 && y <= 3) ||
+                (x >= 1 && x <= 10) && (y >= 7 && y <= 10))
             {
                 voronoiBiomes[i] = Instantiate(biomedTile,
                     new Vector3((tileSize * x), tileSize * y, 5),
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
+                voronoiBiomes[i].tag = "sand";
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.yellow;
             }
-            else
+            else if(Random.Range(0.0f, 3.0f) > 1f)
             {
 
-                // Create a new biome tile at this position (Scaled so that it fits the output boundaries).
-                voronoiBiomes[i] = Instantiate(blankTile,
+                voronoiBiomes[i] = Instantiate(biomedTile,
                     new Vector3((tileSize * x), tileSize * y, 5),
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
+                voronoiBiomes[i].tag = "grass";
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.green;
+            }
+            else
+            {
+                voronoiBiomes[i] = Instantiate(biomedTile,
+                    new Vector3((tileSize * x), tileSize * y, 5),
+                    Quaternion.identity);
+                voronoiBiomes[i].transform.SetParent(_PARENT);
+                voronoiBiomes[i].tag = "water";
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.blue;
             }
 
             voronoiBiomes[i].SetActive(true);
@@ -91,7 +105,7 @@ public class Voronoi : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        // While loop used as it may not destroy all children in one clear iteration.
+        // While loop used as it may not destroy all children in one clear iteration cycle.
         while (_PARENT.childCount > 0)
         {
             foreach (Transform child in _PARENT)
@@ -122,8 +136,13 @@ public class Voronoi : MonoBehaviour
             {
                 _THIS.Clear();
             }
+            if(GUILayout.Button("STOP EXECUTION!"))
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+                Debug.Log("Editor scripts halted.");
+            }
             DrawDefaultInspector();
         }
     }
-#endif
 }
+#endif

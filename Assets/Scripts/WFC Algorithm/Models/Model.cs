@@ -7,6 +7,7 @@ The software is provided "as is", without warranty of any kind, express or impli
 */
 
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public abstract class Model
@@ -34,7 +35,6 @@ public abstract class Model
     double[] sumsOfWeights, sumsOfWeightLogWeights, entropies;
 
     private int count;
-
 
     protected Model(int width, int height)
     {
@@ -113,29 +113,60 @@ public abstract class Model
         }
 
 
-        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 0), Vector3.forward * 8f, Color.red, 5f);
-
-        var RayCast = Physics.RaycastAll(new Vector3(argmin % FMX * 2, argmin / FMX * 2), Vector3.forward, 8f);
-
-        if (RayCast.Length > 0)
-        {
-            for (int i = 0; i < RayCast.Length; i++)
-            {
-                if (RayCast[i].transform.GetComponent<Renderer>().sharedMaterial.color == Color.black)
-                {
-                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 0), Vector3.back * 8f, Color.blue, 20f);
-                    wave[argmin][0] = true;
-                    wave[argmin][1] = false;
-                    wave[argmin][2] = false;
-                }
-            }
-        }
+        //Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.forward * 8f, Color.red, 5f);
 
         double[] distribution = new double[T];
         for (int t = 0; t < T; t++)
         {
             distribution[t] = wave[argmin][t] ? weights[t] : 0; // Set the weights of the distribution according to the tile weights, if they are still valid potential states.
         }
+
+        RaycastHit hit;
+        Physics.Raycast(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.forward, out hit, 8f);
+
+        if (hit.transform != null)
+        {
+            switch (hit.transform.gameObject.tag)
+            {
+                case "grass":
+                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.green,
+                        20f);
+                    distribution[0] = 0; // SAND
+                    distribution[1] = 0; // WATER
+                    distribution[2] = 1; // GRASS
+                    break;
+
+                case "sand":
+                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.yellow,
+                        20f);
+                    distribution[0] = 1;
+                    distribution[1] = 0;
+                    distribution[2] = 0;
+                    break;
+
+                case "water":
+                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.blue,
+                        20f);
+                    distribution[0] = 0;
+                    distribution[1] = 1;
+                    distribution[2] = 0;
+                    break;
+
+                // Should not be reached.
+                default:
+                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.black,
+                        20f);
+                    distribution[0] = 1;
+                    distribution[1] = 1;
+                    distribution[2] = 1;
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("huh");
+        }
+
 
         int r = distribution.Random(random.NextDouble()); // Select a random state from the distribution.
 
