@@ -16,7 +16,8 @@ public class Voronoi : MonoBehaviour
 
     public Transform _PARENT; // Object parent these biome tiles will be set as the child of.
 
-    [SerializeField] public Color[] BiomeColors;
+    [SerializeField] private Color[] BiomeColors;
+    [SerializeField] public float[] BiomeWeights;
 
     // screen fitting values: Height: 90   Width: 160
 
@@ -58,17 +59,18 @@ public class Voronoi : MonoBehaviour
 
         for (var i = 0; i < width * height; i++)
         {
-            if ((x >= 1 && x <= 10) && (y >= 1 && y <= 3) ||
-                (x >= 1 && x <= 10) && (y >= 7 && y <= 10))
+            if ((x >= 1 && x <= 50) && (y >= 1 && y <= 50) ||
+                (x >= 70 && x <= 90) && (y >= 70 && y <= 90))
             {
                 voronoiBiomes[i] = Instantiate(biomedTile,
                     new Vector3((tileSize * x), tileSize * y, 5),
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
                 voronoiBiomes[i].tag = "sand";
-                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.yellow;
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[0]; // Yellow - Sand.
             }
-            else if(Random.Range(0.0f, 3.0f) > 1f)
+            else if ((x >= 20 && x <= 70) && (y >= 70 && y <= 90) ||
+                (x >= 60 && x <= 80) && (y >= 20 && y <= 30))
             {
 
                 voronoiBiomes[i] = Instantiate(biomedTile,
@@ -76,7 +78,7 @@ public class Voronoi : MonoBehaviour
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
                 voronoiBiomes[i].tag = "grass";
-                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.green;
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[1]; // Green - Grass.
             }
             else
             {
@@ -85,7 +87,7 @@ public class Voronoi : MonoBehaviour
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
                 voronoiBiomes[i].tag = "water";
-                voronoiBiomes[i].GetComponent<Renderer>().material.color = Color.blue;
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[2]; // Blue - Water.
             }
 
             voronoiBiomes[i].SetActive(true);

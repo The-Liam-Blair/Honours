@@ -9,6 +9,7 @@ The software is provided "as is", without warranty of any kind, express or impli
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public abstract class Model
 {
@@ -33,6 +34,8 @@ public abstract class Model
     int[] sumsOfOnes;
     double sumOfWeights, sumOfWeightLogWeights, startingEntropy;
     double[] sumsOfWeights, sumsOfWeightLogWeights, entropies;
+
+    private float[] biomeWeights;
 
     private int count;
 
@@ -73,6 +76,8 @@ public abstract class Model
 
         stack = new Tuple<int, int>[wave.Length * T];
         stacksize = 0;
+
+        biomeWeights = GameObject.Find("Output").GetComponent<Voronoi>().BiomeWeights;
     }
 
 
@@ -129,28 +134,54 @@ public abstract class Model
             switch (hit.transform.gameObject.tag)
             {
                 case "grass":
-                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.green,
-                        20f);
-                    distribution[0] = 0; // SAND
-                    distribution[1] = 0; // WATER
-                    distribution[2] = 1; // GRASS
-                    break;
+                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[1])
+                    {
+                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f,
+                            Color.green,
+                            3f);
+                        distribution[0] = 0; // SAND
+                        distribution[1] = 0; // WATER
+                        distribution[2] = 1; // GRASS
+                        break;
+                    }
+                    else
+                    {
+                        Debug.Log("Grass weight fell through.");
+                        break;
+                    }
 
                 case "sand":
-                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.yellow,
-                        20f);
-                    distribution[0] = 1;
-                    distribution[1] = 0;
-                    distribution[2] = 0;
-                    break;
+                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[0])
+                    {
+                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f,
+                            Color.yellow,
+                            3f);
+                        distribution[0] = 1;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        break;
+                    }
+                    else
+                    {
+                        Debug.Log("Sand weight fell through.");
+                        break;
+                    }
 
                 case "water":
-                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.blue,
-                        20f);
-                    distribution[0] = 0;
-                    distribution[1] = 1;
-                    distribution[2] = 0;
-                    break;
+                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[2])
+                    {
+                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.blue,
+                            3f);
+                        distribution[0] = 0;
+                        distribution[1] = 1;
+                        distribution[2] = 0;
+                        break;
+                    }
+                    else
+                    {
+                        Debug.Log("Water weight fell through.");
+                        break;
+                    }
 
                 // Should not be reached.
                 default:
