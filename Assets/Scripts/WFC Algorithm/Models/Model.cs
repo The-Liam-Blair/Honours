@@ -7,7 +7,6 @@ The software is provided "as is", without warranty of any kind, express or impli
 */
 
 using System;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -117,9 +116,6 @@ public abstract class Model
             return true;																								  // But is however unused...
         }
 
-
-        //Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.forward * 8f, Color.red, 5f);
-
         double[] distribution = new double[T];
         for (int t = 0; t < T; t++)
         {
@@ -136,9 +132,6 @@ public abstract class Model
                 case "grass":
                     if (Random.Range(0.0f, 1.0f) <= biomeWeights[1])
                     {
-                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f,
-                            Color.green,
-                            3f);
                         distribution[0] = 0; // SAND
                         distribution[1] = 0; // WATER
                         distribution[2] = 1; // GRASS
@@ -146,16 +139,14 @@ public abstract class Model
                     }
                     else
                     {
-                        Debug.Log("Grass weight fell through.");
+                        //distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
+                                              // Can be used to create specific biome blends, but is currently hardcoded.
                         break;
                     }
 
                 case "sand":
                     if (Random.Range(0.0f, 1.0f) <= biomeWeights[0])
                     {
-                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f,
-                            Color.yellow,
-                            3f);
                         distribution[0] = 1;
                         distribution[1] = 0;
                         distribution[2] = 0;
@@ -163,15 +154,14 @@ public abstract class Model
                     }
                     else
                     {
-                        Debug.Log("Sand weight fell through.");
+                        //distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
+                                              // Can be used to create specific biome blends, but is currently hardcoded.
                         break;
                     }
 
                 case "water":
                     if (Random.Range(0.0f, 1.0f) <= biomeWeights[2])
                     {
-                        Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.blue,
-                            3f);
                         distribution[0] = 0;
                         distribution[1] = 1;
                         distribution[2] = 0;
@@ -179,7 +169,6 @@ public abstract class Model
                     }
                     else
                     {
-                        Debug.Log("Water weight fell through.");
                         break;
                     }
 
@@ -192,10 +181,6 @@ public abstract class Model
                     distribution[2] = 1;
                     break;
             }
-        }
-        else
-        {
-            Debug.Log("huh");
         }
 
 

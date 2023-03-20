@@ -59,26 +59,26 @@ public class Voronoi : MonoBehaviour
 
         for (var i = 0; i < width * height; i++)
         {
-            if ((x >= 1 && x <= 50) && (y >= 1 && y <= 50) ||
-                (x >= 70 && x <= 90) && (y >= 70 && y <= 90))
+            if ((x >= 20 && x <= 40) && (y >= 20 && y <= 60) ||
+                (x >= 80 && x <= 85) && (y >= 75 && y <= 85))
             {
-                voronoiBiomes[i] = Instantiate(biomedTile,
-                    new Vector3((tileSize * x), tileSize * y, 5),
-                    Quaternion.identity);
-                voronoiBiomes[i].transform.SetParent(_PARENT);
-                voronoiBiomes[i].tag = "sand";
-                voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[0]; // Yellow - Sand.
-            }
-            else if ((x >= 20 && x <= 70) && (y >= 70 && y <= 90) ||
-                (x >= 60 && x <= 80) && (y >= 20 && y <= 30))
-            {
-
                 voronoiBiomes[i] = Instantiate(biomedTile,
                     new Vector3((tileSize * x), tileSize * y, 5),
                     Quaternion.identity);
                 voronoiBiomes[i].transform.SetParent(_PARENT);
                 voronoiBiomes[i].tag = "grass";
                 voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[1]; // Green - Grass.
+            }
+            else if ((x >= 1 && x <= 50) && (y >= 1 && y <= 70) ||
+                     (x >= 70 && x <= 90) && (y >= 70 && y <= 90))
+            {
+
+                voronoiBiomes[i] = Instantiate(biomedTile,
+                    new Vector3((tileSize * x), tileSize * y, 5),
+                    Quaternion.identity);
+                voronoiBiomes[i].transform.SetParent(_PARENT);
+                voronoiBiomes[i].tag = "sand";
+                voronoiBiomes[i].GetComponent<Renderer>().material.color = BiomeColors[0]; // Yellow - Sand.
             }
             else
             {
@@ -115,13 +115,12 @@ public class Voronoi : MonoBehaviour
                 DestroyImmediate(child.gameObject);
             }
         }
+
         // De-reference the array.
         voronoiBiomes = null;
     }
-
-
-
-    // Handles the generation of UI buttons in the Unity Editor and the functions each button calls.
+}
+// Handles the generation of UI buttons in the Unity Editor and the functions each button calls.
 #if UNITY_EDITOR
     [CustomEditor(typeof(Voronoi))]
     public class VoronoiEditor : Editor
@@ -146,5 +145,4 @@ public class Voronoi : MonoBehaviour
             DrawDefaultInspector();
         }
     }
-}
 #endif
