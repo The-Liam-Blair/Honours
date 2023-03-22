@@ -139,7 +139,7 @@ public abstract class Model
                     }
                     else
                     {
-                        //distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
+                        distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
                                               // Can be used to create specific biome blends, but is currently hardcoded.
                         break;
                     }
@@ -154,7 +154,7 @@ public abstract class Model
                     }
                     else
                     {
-                        //distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
+                        distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
                                               // Can be used to create specific biome blends, but is currently hardcoded.
                         break;
                     }
@@ -169,6 +169,8 @@ public abstract class Model
                     }
                     else
                     {
+                        distribution[2] = 0;  // Experimental idea: If the tile fails the biome force test, still remove grass as an option.
+                                              // Can be used to create specific biome blends, but is currently hardcoded.
                         break;
                     }
 

@@ -245,10 +245,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af8673458abbedb41b046709921ce660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Size: {x: 125, y: 125}
-  Regions: 100
+  Size: {x: 60, y: 60}
+  Regions: 125
   tile: {fileID: 8564590588766259094, guid: e1a0a06ca94b4cd48941f47ade0ede99, type: 3}
   RegionColours: []
+  availableColours:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.92, b: 0.016, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  RegionWeight:
+  - 0.1
+  - 0.2
+  - 0.4
+  - 0.8
   centrePoints: []
 --- !u!4 &1160976335
 Transform:
@@ -258,7 +268,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160976333}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 90.16997, y: 89.29653, z: 83.4314}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
