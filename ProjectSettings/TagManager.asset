@@ -7,10 +7,9 @@ TagManager:
   - sand
   - water
   - grass
-  - blue
-  - green
-  - yellow
-  - white
+  - snow
+  - forest
+  - shallowWater
   layers:
   - Default
   - TransparentFX

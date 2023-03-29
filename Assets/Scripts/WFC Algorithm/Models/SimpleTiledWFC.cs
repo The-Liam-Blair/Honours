@@ -39,16 +39,19 @@ public class SimpleTiledWFC : MonoBehaviour{
  		}
  	}
 
+	/*
  	void Start(){
 		Generate();
 		Run();
 	}
 
+	
 	void Update(){
 		if (incremental){
 			Run();
 		}
 	}
+	*/
 
 
 	public void Run(){

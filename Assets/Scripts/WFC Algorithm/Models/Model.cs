@@ -34,7 +34,7 @@ public abstract class Model
     double sumOfWeights, sumOfWeightLogWeights, startingEntropy;
     double[] sumsOfWeights, sumsOfWeightLogWeights, entropies;
 
-    private float[] biomeWeights;
+    private double[] biomeWeights;
 
     private int count;
 
@@ -76,7 +76,7 @@ public abstract class Model
         stack = new Tuple<int, int>[wave.Length * T];
         stacksize = 0;
 
-        biomeWeights = GameObject.Find("Output").GetComponent<Voronoi>().BiomeWeights;
+        biomeWeights = GameObject.Find("Voronoi").GetComponent<VoronoiBiomes>().RegionWeight;
     }
 
 
@@ -120,72 +120,168 @@ public abstract class Model
         for (int t = 0; t < T; t++)
         {
             distribution[t] = wave[argmin][t] ? weights[t] : 0; // Set the weights of the distribution according to the tile weights, if they are still valid potential states.
+
         }
 
         RaycastHit hit;
-        Physics.Raycast(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.forward, out hit, 8f);
+        Physics.Raycast(new Vector3(argmin % FMX, argmin / FMX), Vector3.forward, out hit, 8f);
 
+        // DISTRIBUTION DICTIONARY:
+        // 0: Snow
+        // 1: Water
+        // 2: Forest
+        // 3: Shallow Water
+        // 4: Grass
+        // 5: Sand
+
+        /*
         if (hit.transform != null)
         {
             switch (hit.transform.gameObject.tag)
             {
+                
                 case "grass":
-                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[1])
                     {
-                        distribution[0] = 0; // SAND
-                        distribution[1] = 0; // WATER
-                        distribution[2] = 1; // GRASS
-                        break;
-                    }
-                    else
-                    {
-                        distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
-                                              // Can be used to create specific biome blends, but is currently hardcoded.
+                        if (random.NextDouble() <= 1f)
+                        {
+                            distribution[0] = 0;
+                            distribution[1] = 0;
+                            distribution[2] = 0;
+                            distribution[3] = 0;
+                            distribution[4] = 1;
+                            distribution[5] = 0;
+                        }
+                        else
+                        {
+                            distribution[0] = 0;
+                            distribution[1] = 0;
+                            distribution[2] = 1;
+                            distribution[3] = 0;
+                            distribution[4] = 0;
+                            distribution[5] = 0;
+                        }
+
                         break;
                     }
 
                 case "sand":
-                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[0])
                     {
-                        distribution[0] = 1;
-                        distribution[1] = 0;
-                        distribution[2] = 0;
-                        break;
-                    }
-                    else
-                    {
-                        distribution[1] = 0;  // Experimental idea: If the tile fails the biome force test, still remove water as an option.
-                                              // Can be used to create specific biome blends, but is currently hardcoded.
+                        if (random.NextDouble() <= 1f)
+                        {
+                            distribution[0] = 0;
+                            distribution[1] = 0;
+                            distribution[2] = 0;
+                            distribution[3] = 0;
+                            distribution[4] = 0;
+                            distribution[5] = 1;
+                        }
+                        else
+                        {
+                            distribution[0] = 0;
+                            distribution[1] = 0;
+                            distribution[2] = 0;
+                            distribution[3] = 0;
+                            distribution[4] = 0;
+                            distribution[5] = 0;
+                        }
+
                         break;
                     }
 
                 case "water":
-                    if (Random.Range(0.0f, 1.0f) <= biomeWeights[2])
+                {
+                    if (random.NextDouble() <= 1f)
                     {
                         distribution[0] = 0;
                         distribution[1] = 1;
                         distribution[2] = 0;
-                        break;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
                     }
                     else
                     {
-                        distribution[2] = 0;  // Experimental idea: If the tile fails the biome force test, still remove grass as an option.
-                                              // Can be used to create specific biome blends, but is currently hardcoded.
-                        break;
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
                     }
 
-                // Should not be reached.
-                default:
-                    Debug.DrawRay(new Vector3(argmin % FMX * 2, argmin / FMX * 2, 2), Vector3.back * 8f, Color.black,
-                        20f);
-                    distribution[0] = 1;
-                    distribution[1] = 1;
-                    distribution[2] = 1;
+                    break;
+                }
+
+                case "snow":
+                    if (random.NextDouble() <= 1f)
+                    {
+                        distribution[0] = 1;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+                    else
+                    {
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+
+                    break;
+
+                case "forest":
+                    if (random.NextDouble() <= 1f)
+                    {
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 1;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+                    else
+                    {
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+
+                    break;
+
+                case "shallowWater":
+                    if (random.NextDouble() <= 1f)
+                    {
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 1;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+                    else
+                    {
+                        distribution[0] = 0;
+                        distribution[1] = 0;
+                        distribution[2] = 0;
+                        distribution[3] = 0;
+                        distribution[4] = 0;
+                        distribution[5] = 0;
+                    }
+
                     break;
             }
         }
 
-
+*/        
+        
         int r = distribution.Random(random.NextDouble()); // Select a random state from the distribution.
 
         bool[] w = wave[argmin];

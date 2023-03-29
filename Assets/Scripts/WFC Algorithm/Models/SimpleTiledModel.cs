@@ -64,7 +64,6 @@ public class SimpleTiledModel : Model
 		List<int[]> action = new List<int[]>();
 		Dictionary<string, int> firstOccurrence = new Dictionary<string, int>();
 
-
 		// For each tile that exists in the tile ruleset, add to the tile list.
         foreach (XmlNode xtile in xnode.ChildNodes)
 		{

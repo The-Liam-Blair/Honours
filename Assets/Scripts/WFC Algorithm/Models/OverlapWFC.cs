@@ -57,6 +57,7 @@ class OverlapWFC : MonoBehaviour{
 		}
 	}
 
+	/*
 	void Awake(){}
 
 	void Start(){
@@ -68,6 +69,8 @@ class OverlapWFC : MonoBehaviour{
 			Run();
 		}
 	}
+
+	*/
 
 	public void Generate() {
 		if (training == null){Debug.Log("Can't Generate: no designated Training component");}

@@ -120,7 +120,7 @@ class Training : MonoBehaviour{
 				// 	fab = PrefabUtility.GetCorrespondingObjectFromSource(tile);
 				// }
 				if (fab == null){
-					fab = (GameObject)Resources.Load(tile.name);
+					fab = Resources.Load(tile.name);
 					if (!fab){
 						fab = tile;
 					}

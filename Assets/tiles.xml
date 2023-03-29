@@ -1,22 +1,68 @@
 <set>
-  <tiles>
-<tile name="SandL" symmetry="X" weight="1.0"/>
-<tile name="WaterL" symmetry="X" weight="1.0"/>
-<tile name="GrassL" symmetry="X" weight="1.0"/>
+	<tiles>
+		<tile name="cliff" symmetry="T" weight="1.0"/>
+		<tile name="cliffcorner" symmetry="L" weight="1.0"/>
+		<tile name="cliffturn" symmetry="L" weight="1.0"/>
+		<tile name="grass" symmetry="X" weight="1.0"/>
+		<tile name="grasscorner" symmetry="L" weight="0.01"/>
+		<tile name="road" symmetry="T" weight="0.05"/>
+		<tile name="roadturn" symmetry="L" weight="0.05"/>
+		<tile name="water_a" symmetry="X" weight="1.0"/>
+		<tile name="water_b" symmetry="X" weight="1.0"/>
+		<tile name="water_c" symmetry="X" weight="1.0"/>
+		<tile name="watercorner" symmetry="L" weight="1.0"/>
+		<tile name="waterside" symmetry="T" weight="1.0"/>
+		<tile name="waterturn" symmetry="L" weight="1.0"/>
 	</tiles>
-<neighbors>  <neighbor left="GrassL 1" right="GrassL 1"/>
-  <neighbor left="GrassL 0" right="GrassL 0"/>
-  <neighbor left="WaterL 1" right="WaterL 1"/>
-  <neighbor left="WaterL 0" right="WaterL 0"/>
-  <neighbor left="SandL 1" right="GrassL 1"/>
-  <neighbor left="SandL 0" right="GrassL 0"/>
-  <neighbor left="GrassL 0" right="SandL 0"/>
-  <neighbor left="GrassL 1" right="SandL 1"/>
-  <neighbor left="WaterL 1" right="SandL 1"/>
-  <neighbor left="SandL 1" right="SandL 1"/>
-  <neighbor left="WaterL 0" right="SandL 0"/>
-  <neighbor left="SandL 0" right="WaterL 0"/>
-  <neighbor left="SandL 1" right="WaterL 1"/>
-  <neighbor left="SandL 0" right="SandL 0"/>
+	<neighbors>
+		<neighbor left="cliff 0" right="cliff 0"/>
+		<neighbor left="cliff 2" right="cliffcorner 1"/>
+		<neighbor left="cliff 2" right="cliffturn 2"/>
+		<neighbor left="cliff 1" right="grass 0"/>
+		<neighbor left="grass 0" right="cliff 1"/>
+		<neighbor left="cliff 1" right="road 3"/>
+		<neighbor left="road 1" right="cliff 1"/>
+		<neighbor left="cliff 1" right="roadturn 0"/>
+		<neighbor left="roadturn 1" right="cliff 1"/>
+		<neighbor left="cliffcorner 0" right="cliffturn 2"/>
+		<neighbor left="cliffcorner 1" right="road 3"/>
+		<neighbor left="cliffcorner 1" right="roadturn 0"/>
+		<neighbor left="cliffcorner 1" right="roadturn 3"/>
+		<neighbor left="cliffcorner 1" right="grass 0"/>
+		<neighbor left="cliffturn 1" right="grass 0"/>
+		<neighbor left="cliffturn 1" right="road 3"/>
+		<neighbor left="cliffturn 1" right="roadturn 0"/>
+		<neighbor left="cliffturn 1" right="roadturn 3"/>
+		<neighbor left="grass 0" right="grass 0"/>
+		<neighbor left="grass 0" right="road 3"/>
+		<neighbor left="grass 0" right="roadturn 0"/>
+		<neighbor left="grass 0" right="watercorner 0"/>
+		<neighbor left="grass 0" right="waterside 3"/>
+		<neighbor left="grasscorner 1" right="grasscorner 0"/>
+		<neighbor left="grasscorner 1" right="grasscorner 3"/>
+		<neighbor left="grasscorner 1" right="road 1"/>
+		<neighbor left="grasscorner 3" right="road 0"/>
+		<neighbor left="grasscorner 3" right="roadturn 1"/>
+		<neighbor left="road 3" right="road 1"/>
+		<neighbor left="road 0" right="road 0"/>
+		<neighbor left="road 0" right="roadturn 1"/>
+		<neighbor left="road 1" right="watercorner 0"/>
+		<neighbor left="road 1" right="waterside 3"/>
+		<neighbor left="roadturn 1" right="watercorner 0"/>
+		<neighbor left="roadturn 1" right="watercorner 3"/>
+		<neighbor left="roadturn 1" right="waterside 3"/>
+		<neighbor left="water_a 0" right="water_a 0"/>
+		<neighbor left="water_a 0" right="water_b 0"/>
+		<neighbor left="water_a 0" right="water_c 0"/>
+		<neighbor left="water_a 0" right="waterside 1"/>
+		<neighbor left="water_a 0" right="waterturn 1"/>
+		<neighbor left="water_b 0" right="waterside 1"/>
+		<neighbor left="water_b 0" right="waterturn 1"/>
+		<neighbor left="water_c 0" right="waterside 1"/>
+		<neighbor left="water_c 0" right="waterturn 1"/>
+		<neighbor left="watercorner 0" right="waterside 0"/>
+		<neighbor left="watercorner 0" right="waterturn 0"/>
+		<neighbor left="waterside 0" right="waterside 0"/>
+		<neighbor left="waterside 0" right="waterturn 0"/>
 	</neighbors>
 </set>
