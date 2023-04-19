@@ -1,0 +1,46 @@
+<!-- RULE SET FOR THE VORONOI REGIONS MAIN ALGORITHM, DEFINING BIOME ADJACENCY RULES -->
+<set>
+  <tiles>
+<tile name="FinalTiles/Snow" symmetry="X" weight="1.0"/>
+<tile name="FinalTiles/Water" symmetry="X" weight="1.0"/>
+<tile name="FinalTiles/Forest" symmetry="X" weight="1.0"/>
+<tile name="FinalTiles/ShallowWater" symmetry="X" weight="1.0"/>
+<tile name="FinalTiles/Grass" symmetry="X" weight="1.0"/>
+<tile name="FinalTiles/Sand" symmetry="X" weight="1.0"/>
+	</tiles>
+  
+<neighbors>
+  <neighbor left="FinalTiles/Water 1" right="FinalTiles/Water 1"/>
+  <neighbor left="FinalTiles/Water 0" right="FinalTiles/Water 0"/>
+  <neighbor left="FinalTiles/ShallowWater 1" right="FinalTiles/Water 1"/>
+  <neighbor left="FinalTiles/Forest 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/Snow 1" right="FinalTiles/Snow 1"/>
+  <neighbor left="FinalTiles/ShallowWater 0" right="FinalTiles/Water 0"/>
+  <neighbor left="FinalTiles/Water 0" right="FinalTiles/ShallowWater 0"/>
+  <neighbor left="FinalTiles/Water 1" right="FinalTiles/ShallowWater 1"/>
+  <neighbor left="FinalTiles/Forest 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/Forest 0"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/Forest 1"/>
+  <neighbor left="FinalTiles/Snow 0" right="FinalTiles/Snow 0"/>
+  <neighbor left="FinalTiles/Sand 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/Sand 1" right="FinalTiles/Sand 1"/>
+  <neighbor left="FinalTiles/Forest 1" right="FinalTiles/Forest 1"/>
+  <neighbor left="FinalTiles/Sand 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/Sand 0"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/Sand 1"/>
+  <neighbor left="FinalTiles/Sand 0" right="FinalTiles/Sand 0"/>
+  <neighbor left="FinalTiles/Forest 0" right="FinalTiles/Forest 0"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/Snow 1"/>
+  <neighbor left="FinalTiles/ShallowWater 1" right="FinalTiles/Sand 1"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/ShallowWater 1" right="FinalTiles/ShallowWater 1"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/Snow 0"/>
+  <neighbor left="FinalTiles/Snow 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Snow 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/ShallowWater 0" right="FinalTiles/Sand 0"/>
+  <neighbor left="FinalTiles/Sand 0" right="FinalTiles/ShallowWater 0"/>
+  <neighbor left="FinalTiles/Sand 1" right="FinalTiles/ShallowWater 1"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/ShallowWater 0" right="FinalTiles/ShallowWater 0"/>
+	</neighbors>
+</set>

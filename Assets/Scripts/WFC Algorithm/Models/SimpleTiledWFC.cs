@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -22,6 +23,7 @@ public class SimpleTiledWFC : MonoBehaviour{
 	public int depth = 20;
 
 	public int seed = 0;
+    public int BiomeSpreadSeed = 0;
 	public bool periodic = false;
 	public int iterations = 0;
 	public bool incremental;
@@ -29,72 +31,143 @@ public class SimpleTiledWFC : MonoBehaviour{
 	public SimpleTiledModel model = null;
 	public GameObject[,] rendering;
 	public GameObject output;
-	private Transform group;
+	public Transform group;
 	public Dictionary<string, GameObject> obmap = new Dictionary<string, GameObject>();
     private bool undrawn = true;
 
-	public void destroyChildren (){
+    public bool generate = false;
+    public int contradictionCounter = 0;
+
+    public int collapsedNeighbourThreshold;
+    public float[] BiomeSpreadValues;
+
+
+    public void destroyChildren (){
 		foreach (Transform child in this.transform) {
      		GameObject.DestroyImmediate(child.gameObject);
- 		}
- 	}
+		}
+	}
 
 	/*
  	void Start(){
 		Generate();
 		Run();
 	}
-
-	
-	void Update(){
-		if (incremental){
-			Run();
-		}
-	}
 	*/
 
-
-	public void Run(){
-		if (model == null){return;}
-        if (undrawn == false) { return; }
-        if (model.Run(seed, iterations)){
-			Draw();
+	
+	void Update()
+    {
+        if (contradictionCounter >= 1000) // > 1,000 contradictions for a given generation likely means that it's impossible to generate a map with the given parameters.
+        {
+            generate = false;
+			Debug.Log("Failed to generate.");
+            contradictionCounter = 0;
+        }
+        else if (generate && incremental)
+        {
+			Run();
 		}
-	}
 
-	public void OnDrawGizmos(){
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Debug.Log("GENERATION FORCEFULLY STOPPED");
+            generate = false;
+        }
+
+		else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+	}
+	
+
+
+	public void Run()
+	{
+		if (model == null)
+		{
+			return;
+		}
+
+		if (undrawn == false)
+		{
+			return;
+		}
+
+        switch (model.Run(seed, BiomeSpreadSeed, iterations))
+        {
+			case true:
+                Draw();
+                break;
+
+			case false:
+                foreach (Transform tile in @group)
+                {
+                    DestroyImmediate(tile.gameObject);
+                }
+                contradictionCounter++;
+				Debug.Log(contradictionCounter);
+				Generate();
+                break;
+        }
+    }
+
+    public void OnDrawGizmos(){
 		Gizmos.matrix = transform.localToWorldMatrix;
 		Gizmos.color = Color.magenta;
 		Gizmos.DrawWireCube(new Vector3(width*gridsize/2f-gridsize*0.5f, depth*gridsize/2f-gridsize*0.5f, 0f),new Vector3(width*gridsize, depth*gridsize, gridsize));
 	}
 
-	public void Generate(){
-		obmap = new  Dictionary<string, GameObject>();
+	public void Generate()
+    {
+        obmap = new Dictionary<string, GameObject>();
 
-		if (output == null){
-			Transform ot = transform.Find("output-tiled");
-			if (ot != null){output = ot.gameObject;}}
-		if (output == null){
-			output = new GameObject("output-tiled");
-			output.transform.parent = transform;
-			output.transform.position = this.gameObject.transform.position;
-			output.transform.rotation = this.gameObject.transform.rotation;}
+            if (output == null)
+            {
+                Transform ot = transform.Find("output-tiled");
+                if (ot != null)
+                {
+                    output = ot.gameObject;
+                }
+            }
 
-		for (int i = 0; i < output.transform.childCount; i++){
-			GameObject go = output.transform.GetChild(i).gameObject;
-			if (Application.isPlaying){Destroy(go);} else {DestroyImmediate(go);}
-		}
-		group = new GameObject(xml.name).transform;
-		group.parent = output.transform;
-		group.position = output.transform.position;
-		group.rotation = output.transform.rotation;
-        group.localScale = new Vector3(1f, 1f, 1f);
-        rendering = new GameObject[width, depth];
-		this.model = new SimpleTiledModel(xml.text, subset, width, depth, periodic);
-        undrawn = true;
+            if (output == null)
+            {
+                output = new GameObject("output-tiled");
+                output.transform.parent = transform;
+                output.transform.position = this.gameObject.transform.position;
+                output.transform.rotation = this.gameObject.transform.rotation;
+            }
+
+            for (int i = 0; i < output.transform.childCount; i++)
+            {
+                GameObject go = output.transform.GetChild(i).gameObject;
+                if (Application.isPlaying)
+                {
+                    Destroy(go);
+                }
+                else
+                {
+                    DestroyImmediate(go);
+                }
+            }
+
+            group = new GameObject(xml.name).transform;
+            group.parent = output.transform;
+            group.position = output.transform.position;
+            group.rotation = output.transform.rotation;
+            group.localScale = new Vector3(1f, 1f, 1f);
+            rendering = new GameObject[width, depth];
+            this.model = new SimpleTiledModel(xml.text, subset, width, depth, periodic);
+            model.collapsedNeighbourThreshold = collapsedNeighbourThreshold;
+            model.BiomeSpreadValues = BiomeSpreadValues;
+            undrawn = true;
+
+            Run();
     }
 
-	public void Draw(){
+    public void Draw(){
 		if (output == null){return;}
 		if (group == null){return;}
         undrawn = false;
@@ -145,10 +218,11 @@ public class TileSetEditor : Editor {
 		if (me.xml != null){
 			if(GUILayout.Button("generate")){
 				me.Generate();
-			}
+                me.generate = true;
+            }
 			if (me.model != null){
 				if(GUILayout.Button("RUN")){
-					me.model.Run(me.seed, me.iterations);
+					me.model.Run(me.seed, me.BiomeSpreadSeed, me.iterations);
 					me.Draw();
 				}
 			}

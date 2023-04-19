@@ -8,13 +8,13 @@ public class CamMove : MonoBehaviour
     // Move camera based on input
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.Q))
         {
-            transform.position += transform.forward * Time.deltaTime * 10;
+            transform.position += transform.forward * Time.deltaTime * 100;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.E))
         {
-            transform.position -= transform.forward * Time.deltaTime * 10;
+            transform.position -= transform.forward * Time.deltaTime * 100;
         }
         if (Input.GetKey(KeyCode.A))
         {
@@ -24,13 +24,13 @@ public class CamMove : MonoBehaviour
         {
             transform.position += transform.right * Time.deltaTime * 10;
         }
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.S))
         {
-            transform.position -= transform.up * Time.deltaTime * 10;
+            transform.position -= transform.up * Time.deltaTime * 25;
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.W))
         {
-            transform.position += transform.up * Time.deltaTime * 10;
+            transform.position += transform.up * Time.deltaTime * 25;
         }
     }
 }

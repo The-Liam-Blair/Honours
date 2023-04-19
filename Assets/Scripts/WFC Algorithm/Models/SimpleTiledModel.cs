@@ -10,6 +10,7 @@ using System;
 using System.Xml;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Simple Tiled Model implementation used in the Wave Function Collapse algorithm.
@@ -162,9 +163,16 @@ public class SimpleTiledModel : Model
 
             // Retrieve tile's weight.
             for (int t = 0; t < cardinality; t++) tempStationary.Add(xtile.Get("weight", 1.0f));
-		}
+        }
 
-		T = action.Count;
+        /* Uncomment to see the order of tiles in the list when running the WFC algorithm!
+        for (int i = 0; i < tiles.Count; i++)
+        {
+			Debug.Log(tiles[i]);
+        }
+		*/
+
+        T = action.Count;
 		weights = tempStationary.ToArray();
 
         propagator = new int[4][][];

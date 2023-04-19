@@ -1,0 +1,92 @@
+<!--- RULE SET FOR THE ROTATIONAL TEST ALGORITHM, DEFINING ADJACENCY RULES AND SPECIALIZED L - ROTATED TILES TO CONTAIN RANDOM, ROTATIONLESS TILES.-->
+<set>
+  <tiles>
+    <tile name="FinalTiles/ShallowWater" symmetry="X" weight="0.5"/>
+    <tile name="FinalTiles/Water" symmetry="X" weight="0.5"/>
+    <tile name="FinalTiles/ShallowWaterLTile" symmetry="L" weight="0.8"/>
+    <tile name="FinalTiles/WaterLTile" symmetry="L" weight="0.01"/>
+    <tile name="FinalTiles/GrassLTile" symmetry="L" weight="0.5"/>
+    <tile name="FinalTiles/SandLTile" symmetry="L" weight="0.01"/>
+    <tile name="FinalTiles/Sand" symmetry="X" weight="0.5"/>
+    <tile name="FinalTiles/Grass" symmetry="X" weight="0.5"/>
+    <tile name="FinalTiles/Snow" symmetry="X" weight="0.5"/>
+    <tile name="FinalTiles/SnowLTile" symmetry="L" weight="0.025"/>
+    <tile name="FinalTiles/Forest" symmetry="X" weight="0.25"/>
+    <tile name="FinalTiles/ForestLTile" symmetry="L" weight="0.025"/>
+	</tiles>
+  
+<neighbors>
+  <neighbor left="FinalTiles/ShallowWaterLTile 0" right="FinalTiles/ShallowWaterLTile 0"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 1" right="FinalTiles/ShallowWater 1"/>
+  <neighbor left="FinalTiles/WaterLTile 0" right="FinalTiles/ShallowWater 0"/>
+  <neighbor left="FinalTiles/WaterLTile 1" right="FinalTiles/WaterLTile 1"/>
+  <neighbor left="FinalTiles/ShallowWater 0" right="FinalTiles/ShallowWater 0"/>
+  <neighbor left="FinalTiles/ShallowWater 1" right="FinalTiles/ShallowWater 1"/>
+  <neighbor left="FinalTiles/ShallowWater 0" right="FinalTiles/WaterLTile 0"/>
+  <neighbor left="FinalTiles/ShallowWater 1" right="FinalTiles/ShallowWaterLTile 1"/>
+  <neighbor left="FinalTiles/WaterLTile 0" right="FinalTiles/WaterLTile 0"/>
+  <neighbor left="FinalTiles/WaterLTile 1" right="FinalTiles/ShallowWaterLTile 1"/>
+  <neighbor left="FinalTiles/WaterLTile 1" right="FinalTiles/Water 1"/>
+  <neighbor left="FinalTiles/WaterLTile 0" right="FinalTiles/ShallowWaterLTile 0"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 1" right="FinalTiles/ShallowWaterLTile 1"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 0" right="FinalTiles/WaterLTile 0"/>
+  <neighbor left="FinalTiles/WaterLTile 0" right="FinalTiles/Water 0"/>
+  <neighbor left="FinalTiles/Water 0" right="FinalTiles/Water 0"/>
+  <neighbor left="FinalTiles/Water 1" right="FinalTiles/Water 1"/>
+  <neighbor left="FinalTiles/Water 0" right="FinalTiles/WaterLTile 0"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 1" right="FinalTiles/WaterLTile 1"/>
+  <neighbor left="FinalTiles/Water 1" right="FinalTiles/WaterLTile 1"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 1" right="FinalTiles/SandLTile 1"/>
+  <neighbor left="FinalTiles/GrassLTile 0" right="FinalTiles/GrassLTile 0"/>
+  <neighbor left="FinalTiles/GrassLTile 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/ShallowWaterLTile 0" right="FinalTiles/SandLTile 0"/>
+  <neighbor left="FinalTiles/SandLTile 0" right="FinalTiles/ShallowWaterLTile 0"/>
+  <neighbor left="FinalTiles/SandLTile 1" right="FinalTiles/ShallowWaterLTile 1"/>
+  <neighbor left="FinalTiles/SandLTile 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/SandLTile 1" right="FinalTiles/SandLTile 1"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/Grass 1"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/SandLTile 0"/>
+  <neighbor left="FinalTiles/Grass 1" right="FinalTiles/GrassLTile 1"/>
+  <neighbor left="FinalTiles/SandLTile 0" right="FinalTiles/SandLTile 0"/>
+  <neighbor left="FinalTiles/SandLTile 1" right="FinalTiles/GrassLTile 1"/>
+  <neighbor left="FinalTiles/SandLTile 1" right="FinalTiles/Sand 1"/>
+  <neighbor left="FinalTiles/SandLTile 0" right="FinalTiles/GrassLTile 0"/>
+  <neighbor left="FinalTiles/GrassLTile 1" right="FinalTiles/GrassLTile 1"/>
+  <neighbor left="FinalTiles/GrassLTile 0" right="FinalTiles/SandLTile 0"/>
+  <neighbor left="FinalTiles/GrassLTile 1" right="FinalTiles/SandLTile 1"/>
+  <neighbor left="FinalTiles/SandLTile 0" right="FinalTiles/Sand 0"/>
+  <neighbor left="FinalTiles/Sand 0" right="FinalTiles/Sand 0"/>
+  <neighbor left="FinalTiles/Sand 1" right="FinalTiles/Sand 1"/>
+  <neighbor left="FinalTiles/Sand 0" right="FinalTiles/SandLTile 0"/>
+  <neighbor left="FinalTiles/Sand 1" right="FinalTiles/SandLTile 1"/>
+  <neighbor left="FinalTiles/SnowLTile 0" right="FinalTiles/SnowLTile 0"/>
+  <neighbor left="FinalTiles/SnowLTile 1" right="FinalTiles/GrassLTile 1"/>
+  <neighbor left="FinalTiles/SnowLTile 0" right="FinalTiles/GrassLTile 0"/>
+  <neighbor left="FinalTiles/SnowLTile 1" right="FinalTiles/SnowLTile 1"/>
+  <neighbor left="FinalTiles/GrassLTile 0" right="FinalTiles/SnowLTile 0"/>
+  <neighbor left="FinalTiles/ForestLTile 0" right="FinalTiles/ForestLTile 0"/>
+  <neighbor left="FinalTiles/ForestLTile 1" right="FinalTiles/GrassLTile 1"/>
+  <neighbor left="FinalTiles/GrassLTile 1" right="FinalTiles/SnowLTile 1"/>
+  <neighbor left="FinalTiles/ForestLTile 0" right="FinalTiles/GrassLTile 0"/>
+  <neighbor left="FinalTiles/ForestLTile 1" right="FinalTiles/ForestLTile 1"/>
+  <neighbor left="FinalTiles/GrassLTile 0" right="FinalTiles/ForestLTile 0"/>
+  <neighbor left="FinalTiles/GrassLTile 1" right="FinalTiles/ForestLTile 1"/>
+  <neighbor left="FinalTiles/ForestLTile 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/ForestLTile 0"/>
+  <neighbor left="FinalTiles/SnowLTile 0" right="FinalTiles/Grass 0"/>
+  <neighbor left="FinalTiles/Grass 0" right="FinalTiles/SnowLTile 0"/>
+  <neighbor left="FinalTiles/SnowLTile 1" right="FinalTiles/Snow 1"/>
+  <neighbor left="FinalTiles/SnowLTile 0" right="FinalTiles/Snow 0"/>
+  <neighbor left="FinalTiles/Snow 0" right="FinalTiles/Snow 0"/>
+  <neighbor left="FinalTiles/Snow 1" right="FinalTiles/Snow 1"/>
+  <neighbor left="FinalTiles/Snow 0" right="FinalTiles/SnowLTile 0"/>
+  <neighbor left="FinalTiles/Snow 1" right="FinalTiles/SnowLTile 1"/>
+  <neighbor left="FinalTiles/ForestLTile 1" right="FinalTiles/Forest 1"/>
+  <neighbor left="FinalTiles/ForestLTile 0" right="FinalTiles/Forest 0"/>
+  <neighbor left="FinalTiles/Forest 0" right="FinalTiles/Forest 0"/>
+  <neighbor left="FinalTiles/Forest 1" right="FinalTiles/Forest 1"/>
+  <neighbor left="FinalTiles/Forest 0" right="FinalTiles/ForestLTile 0"/>
+  <neighbor left="FinalTiles/Forest 1" right="FinalTiles/ForestLTile 1"/>
+	</neighbors>
+</set>

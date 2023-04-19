@@ -12,6 +12,7 @@ class OverlapWFC : MonoBehaviour{
 	public int width = 20;
 	public int depth = 20;
 	public int seed = 0;
+    public int BiomeSpreadSeed = 0;
 	//[HideInInspector]
 	public int N = 2;
 	public bool periodicInput = false;
@@ -113,7 +114,7 @@ class OverlapWFC : MonoBehaviour{
 	public void Run(){
 		if (model == null){return;}
         if (undrawn == false) { return; }
-        if (model.Run(seed, iterations)){
+        if (model.Run(seed, BiomeSpreadSeed, iterations)){
 			Draw();
 		}
 	}
