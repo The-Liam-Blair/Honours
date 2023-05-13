@@ -1,54 +1,63 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 using Quaternion = UnityEngine.Quaternion;
-using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
-using Vector = System.Numerics.Vector;
 
 public class VoronoiBiomes : MonoBehaviour
 {
     // NOTE
     // If colours are moved around in the available colours list or otherwise, the exact values for Color.yellow are (1f, 0.9215686f, 0.01568628f, 1f).
     // Using the values suggested by Unity (1f, 0.92f, 0.016f, 1f) will create a big enough gap between the two colour values that the Math.Approximately function will fail
-    //  (In the UpdateRegionColour() function) resulting in the tags of formerly yellow times to remain yellow and will not change, and WILL cause the WFC algorithm to fail!
+    //  (In the UpdateRegionColour() function) resulting in the tags of formerly yellow tiles to remain yellow and will not change, and WILL cause the WFC algorithm to fail!
+    
 
+    // Dimensions of the region map as x and y size values.
     [SerializeField] public Vector2 Size;
 
+    // Number of Vornoi regions.
     [SerializeField] public int Regions;
 
+    // Reference to the tile prefab.
     [SerializeField] public GameObject tile;
 
+    // Current number of Lloyd's Relaxation iterations to be applied to the algorithm.
     [SerializeField] public int LloydIterations;
 
+    // Colours that each tile per region.
     public Color[] RegionColours;
 
+    // The available colours that each region can be set to.
     public Color[] availableColours;
-    public double[] RegionWeight;
 
-    private GameObject[] BiomeMap;
+    // The array of tiles that form the Voronoi region output.
+    public GameObject[] BiomeMap;
 
+    // The centroid each tile belongs to, aligned with BiomeMap.
+    public int[] BiomeMapRegions;
+
+    // Positions of centroids.
     public Vector2[] centrePoints;
 
+    // Parent object reference for cleaning up the Unity editor object hierarchy.
     private GameObject _parent;
 
+    // List of adjacency rules, mimicking WFC's rules, to be used to solve the adjacency problem.
     List<Tuple<Color,Color>> AdjacencyRules;
+
+    // The desired distribution of each colour.
+    public double[] RegionWeight;
+
+    // The current actual distribution of each colour.
+    public double[] CurrentRegionWeight;
 
     private byte iter = 0;
 
     private System.Random random;
-
-    private List<GameObject[]> RegionsPerCentroid;
 
     private void Start()
     {
@@ -77,7 +86,6 @@ public class VoronoiBiomes : MonoBehaviour
 
         iter = 0;
 
-        RegionsPerCentroid = new List<GameObject[]>();
 
         AdjacencyRules = new List<Tuple<Color, Color>>();
 
@@ -97,19 +105,18 @@ public class VoronoiBiomes : MonoBehaviour
         }
 
         BiomeMap = new GameObject[(int) (Size.x * Size.y)];
+        BiomeMapRegions = new int[BiomeMap.Length];
         centrePoints = new Vector2[Regions];
 
         // Generate random points for each centroid.
         for (int i = 0; i < Regions; i++)
         {
             centrePoints[i] = new Vector2(random.Next(0, (int) Size.x), random.Next(0, (int) Size.y));
-            RegionsPerCentroid.Add(Array.Empty<GameObject>());
             Debug.DrawRay(centrePoints[i], Vector3.back * 5f, Color.red, 5f);
         }
 
         // Draw the Voronoi diagram.
         GenerateVoronoiBiomeMap(false, time);
-        
     }
 
     private void GenerateVoronoiBiomeMap(bool regen = false, float time = 0f)
@@ -130,7 +137,7 @@ public class VoronoiBiomes : MonoBehaviour
             }
 
             // Find the closest centroid to the current tile, and set its colour to the colour of that centroid.
-            BiomeMap[i].GetComponent<Renderer>().material.color = RegionColours[FindClosestCentroid(centrePoints, new Vector2(x, y))];
+            BiomeMap[i].GetComponent<Renderer>().material.color = RegionColours[FindClosestCentroid(centrePoints, BiomeMap[i].transform.position)];
 
             var col = BiomeMap[i].GetComponent<Renderer>().material.color;
 
@@ -170,14 +177,22 @@ public class VoronoiBiomes : MonoBehaviour
             }
         }
 
+        for (int i = 0; i < BiomeMap.Length; i++)
+        {
+            BiomeMapRegions[i] = FindClosestCentroid(centrePoints, BiomeMap[i].transform.position);
+        }
+
         if (time != 0)
         {
             Debug.Log("TIME (ms) OF BIOME CREATION" + (Time.realtimeSinceStartup - time) * 1000f);
         }
+
+        // Initialize the biome distribution weights to prepare for biome correction.
+        CalculateBiomeDistribution();
     }
 
     
-    // Slightly incorrect method of finding the closest centroid, but it produces an interesting, unstructured effect.
+    // Returns the closest centroid.
     int FindClosestCentroid(Vector2[] centroids, Vector2 point)
     {
         float minDistance = float.MaxValue;
@@ -230,9 +245,8 @@ public class VoronoiBiomes : MonoBehaviour
         AdjacencyRules.Add(new Tuple<Color, Color>(new Color(0, 0.5f, 0, 1), new Color(0, 0.5f, 0, 1)));
 
         // Loop until  max iteration count is reached (fail state) or no tiles have been modified in a single iteration (success state).
-        while (notModified && iter < 25)
+        while (notModified && iter < 100)
         {
-            
             //Debug.Log("iter:" + iter);
             notModified = false;
             iter++;
@@ -345,27 +359,27 @@ public class VoronoiBiomes : MonoBehaviour
         {
             if (validRules[i].Item2 == Color.white) // Snow
             {
-                weights[i] = RegionWeight[0];
+                weights[i] = CurrentRegionWeight[0];
             }
             else if (validRules[i].Item2 == Color.yellow) // Desert
             {
-                weights[i] = RegionWeight[1];
+                weights[i] = CurrentRegionWeight[1];
             }
             else if (validRules[i].Item2 == Color.green) // Grass
             {
-                weights[i] = RegionWeight[2];
+                weights[i] = CurrentRegionWeight[2];
             }
             else if (validRules[i].Item2 == Color.blue) // Ocean
             {
-                weights[i] = RegionWeight[3];
+                weights[i] = CurrentRegionWeight[3];
             }
             else if (validRules[i].Item2 == new Color(0, 0.5f, 0, 1)) // Dark green - Forests
             {
-                weights[i] = RegionWeight[4];
+                weights[i] = CurrentRegionWeight[4];
             }
             else if (validRules[i].Item2 == Color.cyan) // Shallow Waters
             {
-                weights[i] = RegionWeight[5];
+                weights[i] = CurrentRegionWeight[5];
             }
             
         }
@@ -376,42 +390,45 @@ public class VoronoiBiomes : MonoBehaviour
         newCol = validRules[weight].Item2;
 
         // Update all tiles associated with the centroid to the new colour.
-        foreach (var t in BiomeMap) 
+        for(int i = 0; i < BiomeMap.Length; i++)
         {
-            if (FindClosestCentroid(centrePoints, new Vector2(t.transform.position.x, t.transform.position.y)) == centroid)
+            if (BiomeMapRegions[i] == centroid)
             {
-                t.GetComponent<Renderer>().material.color = newCol;
+                BiomeMap[i].GetComponent<Renderer>().material.color = newCol;
 
                 // Update tag of the tile as well, as that is read by the WFC algorithm.
 
                 if (newCol == availableColours[0]) 
-                { 
-                    t.tag = "snow";
+                {
+                    BiomeMap[i].tag = "snow";
                 }
                 else if (newCol == availableColours[1])
                 {
-                    t.tag = "sand";
+                    BiomeMap[i].tag = "sand";
                 }
                 else if (newCol == availableColours[2])
                 {
-                    t.tag = "grass";
+                    BiomeMap[i].tag = "grass";
                 }
                 else if (newCol == availableColours[3])
                 {
-                    t.tag = "water";
+                    BiomeMap[i].tag = "water";
                 }
                 else if (newCol == availableColours[4])
                 {
-                    t.tag = "forest";
+                    BiomeMap[i].tag = "forest";
                 }
                 else if (newCol == availableColours[5])
                 {
-                    t.tag = "shallowWater";
+                    BiomeMap[i].tag = "shallowWater";
                 }
             }
         } 
         // Update the centroid's assigned colour as well.
         RegionColours[centroid] = newCol;
+
+        // Once a colour has been assigned, recalculate the weights for the biomes to attempt to skew the weights to match the user's desired distributions.
+        CalculateBiomeDistribution();
     }
 
     public void LloydRelaxation()
@@ -428,12 +445,11 @@ public class VoronoiBiomes : MonoBehaviour
                 Vector2 averagePos = Vector2.zero;
                 int numTiles = 0;
 
-                foreach (var t in BiomeMap)
+                for (int j = 0; j < BiomeMap.Length; j++)
                 {
-                    if (FindClosestCentroid(centrePoints,
-                            new Vector2(t.transform.position.x, t.transform.position.y)) == i)
+                    if (BiomeMapRegions[j] == i)
                     {
-                        averagePos += new Vector2(t.transform.position.x, t.transform.position.y);
+                        averagePos += new Vector2(BiomeMap[j].transform.position.x, BiomeMap[j].transform.position.y);
                         numTiles++;
                     }
                 }
@@ -449,6 +465,29 @@ public class VoronoiBiomes : MonoBehaviour
 
     }
 
+    public void CalculateBiomeDistribution()
+    {
+        // Stores the true distribution of biomes in the map in a given moment.
+        CurrentRegionWeight = new double[availableColours.Count()];
+
+        // Finds the current colours of the regions and stores the count in the region weights array.
+        for (int i = 0; i < CurrentRegionWeight.Length; i++)
+        {
+            CurrentRegionWeight[i] = RegionColours.Count(x => x == availableColours[i]);
+        }
+
+        // Divide by total region count to normalize the results, such that the weights when added equal 1.
+        // Then apply a scaling formula to the weights against the desired user input weight to skew the weights towards the generation the user wants.
+        for (int i = 0; i < CurrentRegionWeight.Length; i++)
+        {
+            CurrentRegionWeight[i] /= Regions;
+
+            // Add an epsilon value to avoid division by zero, in case a given biome type does not exist yet in the current generation.
+            CurrentRegionWeight[i] = (RegionWeight[i] / (CurrentRegionWeight[i] + 0.001));
+        }
+
+    }
+
     private void Clear()
     {
         foreach (var t in BiomeMap)
@@ -457,7 +496,7 @@ public class VoronoiBiomes : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     [CustomEditor(typeof(VoronoiBiomes))]
     public class VoronoiBiomeEditor : Editor
     {
@@ -492,5 +531,5 @@ public class VoronoiBiomes : MonoBehaviour
             DrawDefaultInspector();
         }
     }
-#endif
+    #endif
 }
