@@ -28,7 +28,6 @@ The software is provided "as is", without warranty of any kind, express or impli
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -224,10 +223,12 @@ public abstract class Model
         {
             switch (hit.transform.gameObject.tag)
             {
-
+                // If the Voronoi tile at this position was grass...
                 case "grass":
+                    // Roll a random number between 0 and 1 and compare to this biome's biome spread value. If the roll is less than the spread (fail)...
                     if (biomeSpreadRandom.NextDouble() <= 1 - BiomeSpreadValues[4])
                     {
+                            // This tile is set to grass.
                             for (int i = 0; i < distribution.Length; i++)
                             {
                                 if (i == 4)
@@ -240,12 +241,17 @@ public abstract class Model
                                 }
                             }
                     }
+                    // Otherwise (Roll succeeds)...
                     else
                     {
+                        // Check whether this tile qualifies for biome spread via checking the collapsed neighbour threshold.
+                        // If check succeeds, modify this tile through biome spread.
                         if (collapsedNeighbours >= collapsedNeighbourThreshold)
                         {
                             PerformBiomeSpread(argmin, collapsedNeighbourBiomes, distribution);
                         }
+                        
+                        // Else (if check fails), Go back to original and set tile to grass.
                         else
                         {
                             for (int i = 0; i < distribution.Length; i++)
@@ -261,7 +267,6 @@ public abstract class Model
                             }
                         }
                     }
-
                     break;
 
                 case "sand":
@@ -300,7 +305,6 @@ public abstract class Model
                             }
                         }
                     }
-
                     break;
 
                 case "water":
@@ -339,9 +343,7 @@ public abstract class Model
                             }
                         }
                     }
-
                     break;
-
 
                 case "snow":
                     if (biomeSpreadRandom.NextDouble() <= 1 - BiomeSpreadValues[0])
@@ -379,7 +381,6 @@ public abstract class Model
                             }
                         }
                     }
-
                     break;
 
                 case "forest":
@@ -418,10 +419,7 @@ public abstract class Model
                             }
                         }
                     }
-
                     break;
-
-
 
                 case "shallowWater":
                     if (biomeSpreadRandom.NextDouble() <= 1 - BiomeSpreadValues[3])

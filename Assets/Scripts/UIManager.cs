@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -207,6 +204,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void VoronoiGenerate()
     {
+        WFCGenerator.gameObject.transform.position = new Vector3(1000, 1000, 0); // Hide WFC on generating a new Voronoi diagram.
         voronoiGenerator.GenerateNewVoronoiDiagram();
     }
 
@@ -215,6 +213,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void VoronoiLloydRelaxation()
     {
+        WFCGenerator.gameObject.transform.position = new Vector3(1000, 1000, 0);
         voronoiGenerator.LloydRelaxation();
     }
 
@@ -223,6 +222,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void VoronoiBiomeCorrect()
     {
+        WFCGenerator.gameObject.transform.position = new Vector3(1000, 1000, 0);
         voronoiGenerator.CheckandCorrectBiomeColourAdjacency();
     }
 
@@ -231,6 +231,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void WFCGenerate()
     {
+        // If WFC output was set to hidden, re-enable it.
         if (WFCGenerator.gameObject.transform.position != Vector3.zero)
         {
             WFCGenerator.gameObject.transform.position = Vector3.zero;

@@ -10,7 +10,6 @@ using System;
 using System.Xml;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// Simple Tiled Model implementation used in the Wave Function Collapse algorithm.

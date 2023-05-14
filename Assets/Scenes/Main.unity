@@ -3854,7 +3854,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 249227573}
-  - component: {fileID: 249227572}
   - component: {fileID: 249227571}
   m_Layer: 0
   m_Name: Output
@@ -3890,32 +3889,6 @@ MonoBehaviour:
   contradictionCounter: 0
   collapsedNeighbourThreshold: 0
   BiomeSpreadValues: []
---- !u!114 &249227572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249227569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 733115f9ddabf4ac6b24ba84cc1d0fb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  training: {fileID: 777063447}
-  gridsize: 1
-  width: 80
-  depth: 80
-  seed: 0
-  BiomeSpreadSeed: 0
-  N: 1
-  periodicInput: 1
-  periodicOutput: 0
-  symmetry: 1
-  foundation: 0
-  iterations: 0
-  incremental: 1
-  output: {fileID: 0}
 --- !u!4 &249227573
 Transform:
   m_ObjectHideFlags: 0
@@ -33401,10 +33374,8 @@ MonoBehaviour:
 
     X - Force Stop Generation
 
-    Spacebar
-    - Screenshot screen & save to disk
-
-    Esc - Quit'
+    Esc
+    - Quit'
 --- !u!222 &1970030142
 CanvasRenderer:
   m_ObjectHideFlags: 0
